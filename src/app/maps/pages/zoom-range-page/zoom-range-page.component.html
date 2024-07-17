@@ -5,14 +5,16 @@
   <div class="floating-content">
     <input type="range"
       class="form-range px-2"
-      min="-2"
-      max="18"
+      min="0"
+      max="19"
+      [value]="currentZoom"
+      (input)="zoomChanged(zoomInput.value)"
       #zoomInput
     >
   </div>
   <span class="form-label">
-    Zoom: {{ "zoom" }}
+    Zoom: {{ currentZoom }}
     <br>
-    Lng,Lat {{ "currentLngLat" }}
+    Lng,Lat:  {{ currentLngLat }}
   </span>
 </div>
