@@ -1,13 +1,12 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { control, map, tileLayer, Map, LatLngExpression} from 'leaflet';
+import { control, map, tileLayer, Map, LatLngExpression, LatLngBoundsExpression, latLngBounds, latLng } from 'leaflet';
 
 @Component({
   selector: 'maps-zoom-range-page',
   templateUrl: './zoom-range-page.component.html',
-  styleUrl: './zoom-range-page.component.css'
+  styleUrl: './zoom-range-page.component.css',
 })
 export class ZoomRangePageComponent {
-
   private myMap?: Map;
 
   @ViewChild('map')
@@ -17,30 +16,39 @@ export class ZoomRangePageComponent {
 
   public currentLngLat: LatLngExpression = [51.505, -0.09];
 
+  public southWest = latLng(-89.98155760646617, -180);
+  public northEast = latLng(89.99346179538875, 180);
+  public bounds = latLngBounds(this.southWest, this.northEast);
+
+
   ngAfterViewInit(): void {
     this.initMap();
 
     this.mapListeners();
   }
 
-  initMap(){
-    if(!this.divMap) throw "Element map wasn't found"
+  initMap() {
+    if (!this.divMap) throw "Element map wasn't found";
     //Define the initial map && disable default zoom control
-    this.myMap = map(this.divMap.nativeElement, {zoomControl: false}).setView(this.currentLngLat, this.currentZoom);
+    this.myMap = map(this.divMap.nativeElement, {
+      zoomControl: false,
+      maxBounds: this.bounds,
+      //maxBoundsViscosity: 1.0,
+    }).setView(this.currentLngLat, this.currentZoom);
 
     //Define traversable layer tiles
     const Layers = tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      attribution:
+        '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.myMap);
     //add zoom control on the bottom left
 
     this.myMap.addControl(control.zoom({ position: 'bottomleft' }));
   }
 
-
   mapListeners() {
-    if ( !this.myMap ) throw 'Map not found!';
+    if (!this.myMap) throw 'Map not found!';
 
     this.myMap.on('zoom', (ev) => {
       this.currentZoom = this.myMap!.getZoom();
@@ -56,9 +64,8 @@ export class ZoomRangePageComponent {
     });
   }
 
-  zoomChanged( value: string ) {
+  zoomChanged(value: string) {
     this.currentZoom = Number(value);
-    this.myMap?.setZoom( this.currentZoom );
+    this.myMap?.setZoom(this.currentZoom);
   }
 }
-
