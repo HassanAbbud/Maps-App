@@ -10,6 +10,6 @@ import { Component, Input } from '@angular/core';
 export class CounterAloneComponent {
 
   @Input()
-  public counter: number = 10;
+  public counter: number = 0;
 
 }
