@@ -35,7 +35,7 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
 
   public currentZoom: number = 16;
 
-  public currentLngLat: LatLngExpression = [28.637446, -106.057549];
+  public currentLatLng: LatLngExpression = [28.637446, -106.057549];
 
   //Define bounds fro longitude and latitude
   public southWest = latLng(-89.98155760646617, -180);
@@ -44,6 +44,7 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
+    this.readFromLocalStorage();
   }
 
   ngOnDestroy(): void {
@@ -57,7 +58,7 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
       zoomControl: false,
       maxBounds: this.bounds,
       //maxBoundsViscosity: 1.0,
-    }).setView(this.currentLngLat, this.currentZoom);
+    }).setView(this.currentLatLng, this.currentZoom);
 
     //Define traversable layer tiles
     const Layers = tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -96,15 +97,22 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
     //   .addTo( this.map );
   }
 
-  addMarker() {
+  generateAtCenter(){
+    const currentLatLng = this.myMap!.getCenter();
+    this.addMarker(currentLatLng);
+  }
+
+  addMarker(latLng: LatLngExpression) {
     //TODO: Add diferent colors to newly created markers
     //const color = '#xxxxxx'.replace(/x/g, y=>(Math.random()*16|0).toString(16));
     if ( !this.myMap ) return;
 
-    const addedMarker = marker(this.myMap.getCenter(), {draggable: true}).addTo(this.myMap)
+    const addedMarker = marker(latLng, {draggable: true}).addTo(this.myMap)
 
     this.myAddedMarkers.push(addedMarker);
     // dragend
+
+    this.saveToLocalStorage();
   }
 
   deleteMarker(index: number) {
@@ -114,6 +122,24 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
 
   flyToMarker( currentMarker: Marker ){
     this.myMap?.flyTo(currentMarker.getLatLng(), 13)
+  }
+
+  saveToLocalStorage(){
+    const savedMarkers: LatLngExpression[] = this.myAddedMarkers.map( marker  => {
+      return marker.getLatLng();
+    });
+
+    localStorage.setItem('savedMarkers', JSON.stringify( savedMarkers ));
+  }
+
+  readFromLocalStorage(){
+    // ?? means that if it doesn't arrive/doesn't exist it returns empty array []
+    const savedMarkersString: string | null = localStorage.getItem("savedMarkers");
+    const savedMarkers: LatLngExpression[] = savedMarkersString ? JSON.parse(savedMarkersString) : [];
+
+    savedMarkers.forEach( savedMarker => {
+      this.addMarker(savedMarker);
+    })
   }
 
 }
