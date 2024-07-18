@@ -1,4 +1,4 @@
-import { latLng } from 'leaflet';
+import { latLng, Marker } from 'leaflet';
 import {
   AfterViewInit,
   Component,
@@ -12,7 +12,6 @@ import {
   LatLngExpression,
   map,
   Map,
-  Marker,
   tileLayer,
   marker,
   icon,

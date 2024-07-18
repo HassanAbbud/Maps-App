@@ -14,6 +14,10 @@ export class FullScreenPageComponent implements AfterViewInit{
   @ViewChild('map')
   public divMap?: ElementRef;
 
+  ngAfterViewInit(): void {
+    this.initMap();
+  }
+
   initMap(){
     if(!this.divMap) throw "Element map wasn't found"
     //Define the initial map
@@ -26,7 +30,4 @@ export class FullScreenPageComponent implements AfterViewInit{
     }).addTo(this.myMap);
   }
 
-  ngAfterViewInit(): void {
-    this.initMap();
-  }
 }
