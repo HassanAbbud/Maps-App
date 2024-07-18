@@ -104,13 +104,16 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
     const addedMarker = marker(this.myMap.getCenter(), {draggable: true}).addTo(this.myMap)
 
     this.myAddedMarkers.push(addedMarker);
-    console.log(this.myAddedMarkers)
     // dragend
   }
 
   deleteMarker(index: number) {
     this.myAddedMarkers[index].remove()
     this.myAddedMarkers.splice(index, 1);
-    console.log(this.myAddedMarkers)
-    }
+  }
+
+  flyToMarker( currentMarker: Marker ){
+    this.myMap?.flyTo(currentMarker.getLatLng(), 13)
+  }
+
 }
