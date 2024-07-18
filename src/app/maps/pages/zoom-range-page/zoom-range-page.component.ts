@@ -1,21 +1,23 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { control, map, tileLayer, Map, LatLngExpression, LatLngBoundsExpression, latLngBounds, latLng } from 'leaflet';
+import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { control, map, tileLayer, Map, LatLngExpression, latLngBounds, latLng } from 'leaflet';
 
 @Component({
   selector: 'maps-zoom-range-page',
   templateUrl: './zoom-range-page.component.html',
   styleUrl: './zoom-range-page.component.css',
 })
-export class ZoomRangePageComponent {
+export class ZoomRangePageComponent implements OnDestroy, AfterViewInit{
+
   private myMap?: Map;
 
   @ViewChild('map')
   public divMap?: ElementRef;
 
-  public currentZoom: number = 10;
+  public currentZoom: number = 6;
 
-  public currentLngLat: LatLngExpression = [51.505, -0.09];
+  public currentLngLat: LatLngExpression = [28.637446, -106.057549];
 
+  //Define bounds fro longitude and latitude
   public southWest = latLng(-89.98155760646617, -180);
   public northEast = latLng(89.99346179538875, 180);
   public bounds = latLngBounds(this.southWest, this.northEast);
@@ -25,6 +27,10 @@ export class ZoomRangePageComponent {
     this.initMap();
 
     this.mapListeners();
+  }
+
+  ngOnDestroy(): void {
+    this.myMap?.remove();
   }
 
   initMap() {
@@ -54,10 +60,10 @@ export class ZoomRangePageComponent {
       this.currentZoom = this.myMap!.getZoom();
     });
 
-    // this.myMap.on('zoomend', (ev) => {
-    //   if ( this.myMap!.getZoom() < 19 ) return;
-    //   this.myMap!.zoomIn(19);
-    // });
+    this.myMap.on('zoomend', (ev) => {
+      if ( this.myMap!.getZoom() < 19 ) return;
+      this.myMap!.zoomIn(19);
+    });
 
     this.myMap.on('move', () => {
       this.currentLngLat = this.myMap!.getCenter();
