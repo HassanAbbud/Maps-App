@@ -111,7 +111,7 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
 
     this.myAddedMarkers.push(addedMarker);
     // dragend
-
+    addedMarker.on('dragend', ()=> this.saveToLocalStorage() )
     this.saveToLocalStorage();
   }
 
