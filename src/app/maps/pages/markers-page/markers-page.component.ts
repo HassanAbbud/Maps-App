@@ -117,6 +117,8 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
   deleteMarker(index: number) {
     this.myAddedMarkers[index].remove()
     this.myAddedMarkers.splice(index, 1);
+
+    this.deleteFromLocalStorage(index)
   }
 
   flyToMarker( currentMarker: Marker ){
@@ -129,6 +131,15 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
     });
 
     localStorage.setItem('savedMarkers', JSON.stringify( savedMarkers ));
+  }
+
+  deleteFromLocalStorage(markerIndex: number){
+    const savedMarkersString: string | null = localStorage.getItem("savedMarkers");
+    const savedMarkers: LatLngExpression[] = savedMarkersString ? JSON.parse(savedMarkersString) : [];
+
+    savedMarkers.splice(markerIndex, 1);
+
+    localStorage.setItem('savedMarkers', JSON.stringify(savedMarkers));
   }
 
   readFromLocalStorage(){
