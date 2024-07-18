@@ -2,8 +2,10 @@
 
 <ul class="list-group">
   <li
-    class="list-group-item">
-    Marker
+    class="list-group-item"
+    *ngFor="let marker of myAddedMarkers; let i = index"
+    (dblclick)="deleteMarker(i)">
+    Marker {{ i + 1}}
   </li>
 </ul>
 

@@ -1,4 +1,4 @@
-import { LatLng, latLng } from 'leaflet';
+import { latLng } from 'leaflet';
 import {
   AfterViewInit,
   Component,
@@ -24,10 +24,11 @@ import {
   styleUrl: './markers-page.component.css',
 })
 export class MarkersPageComponent implements OnDestroy, AfterViewInit {
+
   private myMap?: Map;
 
   private myMarker: Marker = marker([28.637446, -106.057549], {title: "Chihuahua, Chuhuahua, Mexico"});
-  private myAddedMarkers?: Marker[];
+  public myAddedMarkers: Marker[] = [];
 
   @ViewChild('map')
   public divMap?: ElementRef;
@@ -97,11 +98,19 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
 
   addMarker() {
     //TODO: Add diferent colors to newly created markers
+    //const color = '#xxxxxx'.replace(/x/g, y=>(Math.random()*16|0).toString(16));
     if ( !this.myMap ) return;
 
     const addedMarker = marker(this.myMap.getCenter(), {draggable: true}).addTo(this.myMap)
 
-    this.myAddedMarkers?.push(addedMarker);
+    this.myAddedMarkers.push(addedMarker);
+    console.log(this.myAddedMarkers)
     // dragend
   }
+
+  deleteMarker(index: number) {
+    this.myAddedMarkers[index].remove()
+    this.myAddedMarkers.splice(index, 1);
+    console.log(this.myAddedMarkers)
+    }
 }

@@ -6,16 +6,17 @@
 
 .list-group {
   position: fixed;
-  top: 20px;
-  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  z-index: 999;
   cursor: pointer;
 }
 
   button {
     position: fixed;
-    z-index: 999;
     bottom: 30px;
     right: 20px;
+    z-index: 999;
   }
 
 
