@@ -1,3 +1,4 @@
+import { LatLng, latLng } from 'leaflet';
 import {
   AfterViewInit,
   Component,
@@ -7,7 +8,6 @@ import {
 } from '@angular/core';
 import {
   control,
-  latLng,
   latLngBounds,
   LatLngExpression,
   map,
@@ -27,6 +27,7 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
   private myMap?: Map;
 
   private myMarker: Marker = marker([28.637446, -106.057549], {title: "Chihuahua, Chuhuahua, Mexico"});
+  private myAddedMarkers?: Marker[];
 
   @ViewChild('map')
   public divMap?: ElementRef;
@@ -92,6 +93,15 @@ export class MarkersPageComponent implements OnDestroy, AfterViewInit {
     // })
     //   .setLngLat( this.currentLngLat )
     //   .addTo( this.map );
+  }
 
+  addMarker() {
+    //TODO: Add diferent colors to newly created markers
+    if ( !this.myMap ) return;
+
+    const addedMarker = marker(this.myMap.getCenter(), {draggable: true}).addTo(this.myMap)
+
+    this.myAddedMarkers?.push(addedMarker);
+    // dragend
   }
 }
